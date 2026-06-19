@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Journal — Kindly Offerings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --stone: #E8E0D5; --linen: #F5F0E8; --sage: #8FA888; --clay: #C4A882; --fog: #B8BDB5; --moss: #3D4D3A; --deep: #2A342A; --off: #6B6B62; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--linen); color: var(--deep); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(245,240,232,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(196,168,130,0.18); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; letter-spacing: 0.06em; color: var(--moss); text-decoration: none; }
+    .nav-logo span { font-style: italic; color: var(--clay); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--off); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color .2s; }
+    .nav-links a:hover { color: var(--moss); }
+    .nav-links a.active { color: var(--moss); border-bottom: 1px solid var(--clay); padding-bottom: 2px; }
+    .nav-actions { display: flex; gap: 20px; align-items: center; }
+    .nav-icon { background: none; border: none; cursor: pointer; color: var(--off); transition: color .2s; }
+    .nav-icon:hover { color: var(--moss); }
+    .nav-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    .cart-badge { position: relative; }
+    .cart-badge::after { content: '0'; position: absolute; top: -6px; right: -8px; background: var(--clay); color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+    /* ── HERO ── */
+    .journal-hero { padding: 140px 80px 80px; background: var(--stone); display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; }
+    .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--clay); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem, 5vw, 5rem); font-weight: 300; color: var(--moss); line-height: 1.05; }
+    .hero-title em { font-style: italic; color: var(--clay); }
+    .hero-right { }
+    .hero-sub { font-size: 0.92rem; color: var(--off); line-height: 1.8; max-width: 400px; margin-bottom: 28px; }
+    .category-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill { padding: 7px 18px; border: 1px solid var(--fog); background: none; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--off); cursor: pointer; transition: all .2s; }
+    .pill.active, .pill:hover { background: var(--moss); border-color: var(--moss); color: white; }
+
+    /* ── FEATURED ARTICLE ── */
+    .featured { padding: 0 80px; margin-top: -1px; }
+    .featured-card { display: grid; grid-template-columns: 1fr 1fr; background: white; overflow: hidden; transition: box-shadow .3s; cursor: pointer; }
+    .featured-card:hover { box-shadow: 0 12px 48px rgba(61,77,58,0.12); }
+    .featured-img-wrap { position: relative; overflow: hidden; }
+    .featured-img { width: 100%; height: 100%; min-height: 480px; object-fit: cover; filter: saturate(0.65); transition: transform .6s ease; }
+    .featured-card:hover .featured-img { transform: scale(1.04); }
+    .featured-tag { position: absolute; top: 24px; left: 24px; background: var(--clay); color: white; font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 12px; }
+    .featured-content { padding: 56px 56px 48px; display: flex; flex-direction: column; justify-content: center; }
+    .featured-meta { display: flex; gap: 16px; align-items: center; font-size: 0.72rem; color: var(--fog); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+    .featured-meta .dot { color: var(--clay); }
+    .featured-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem, 2.5vw, 2.4rem); font-weight: 300; color: var(--moss); line-height: 1.2; margin-bottom: 20px; }
+    .featured-title em { font-style: italic; color: var(--clay); }
+    .featured-excerpt { font-size: 0.9rem; color: var(--off); line-height: 1.8; margin-bottom: 32px; }
+    .btn-read { display: inline-flex; align-items: center; gap: 10px; background: var(--moss); color: var(--linen); border: none; padding: 14px 28px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background .2s; width: fit-content; }
+    .btn-read:hover { background: var(--deep); }
+    .btn-read svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ── ARTICLES GRID ── */
+    .articles-section { padding: 64px 80px 80px; }
+    .articles-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; }
+    .articles-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--moss); }
+    .articles-title em { font-style: italic; color: var(--clay); }
+    .articles-count { font-size: 0.75rem; color: var(--fog); letter-spacing: 0.1em; }
+    .articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+
+    .article-card { background: white; display: flex; flex-direction: column; cursor: pointer; transition: box-shadow .3s, transform .2s; }
+    .article-card:hover { box-shadow: 0 8px 32px rgba(61,77,58,0.1); transform: translateY(-3px); }
+    .article-img-wrap { position: relative; overflow: hidden; aspect-ratio: 3/2; }
+    .article-img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.65); transition: transform .5s ease; }
+    .article-card:hover .article-img { transform: scale(1.05); }
+    .article-tag { position: absolute; top: 14px; left: 14px; background: white; color: var(--moss); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; }
+    .article-tag.clay { background: var(--clay); color: white; }
+    .article-tag.sage { background: var(--sage); color: white; }
+    .article-tag.moss { background: var(--moss); color: white; }
+    .article-content { padding: 24px 24px 28px; flex: 1; display: flex; flex-direction: column; }
+    .article-meta { font-size: 0.7rem; color: var(--fog); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; display: flex; gap: 10px; }
+    .article-meta .dot { color: var(--clay); }
+    .article-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--moss); line-height: 1.3; margin-bottom: 12px; flex: 1; }
+    .article-excerpt { font-size: 0.82rem; color: var(--off); line-height: 1.65; margin-bottom: 20px; }
+    .article-foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(184,189,181,0.25); }
+    .article-author { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--off); }
+    .author-dot { width: 24px; height: 24px; background: var(--stone); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; color: var(--moss); }
+    .article-read-time { font-size: 0.7rem; color: var(--fog); letter-spacing: 0.08em; }
+
+    /* ── TOPICS ── */
+    .topics-section { padding: 64px 80px; background: var(--stone); }
+    .topics-header { text-align: center; margin-bottom: 48px; }
+    .topics-eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--clay); margin-bottom: 10px; }
+    .topics-title { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--moss); }
+    .topics-title em { font-style: italic; color: var(--clay); }
+    .topics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .topic-card { position: relative; overflow: hidden; aspect-ratio: 3/4; cursor: pointer; }
+    .topic-img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.5) brightness(0.75); transition: transform .5s, filter .4s; }
+    .topic-card:hover .topic-img { transform: scale(1.06); filter: saturate(0.7) brightness(0.8); }
+    .topic-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(42,52,42,0.8) 0%, transparent 50%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 20px; }
+    .topic-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--linen); margin-bottom: 4px; }
+    .topic-count { font-size: 0.68rem; color: var(--clay); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* ── NEWSLETTER ── */
+    .journal-newsletter { background: var(--moss); padding: 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .nl-eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--clay); margin-bottom: 12px; }
+    .nl-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 300; color: var(--linen); line-height: 1.15; }
+    .nl-title em { font-style: italic; color: var(--clay); }
+    .nl-right { }
+    .nl-body { font-size: 0.9rem; color: rgba(232,224,213,0.65); line-height: 1.75; margin-bottom: 28px; }
+    .nl-form { display: flex; border: 1px solid rgba(184,189,181,0.25); }
+    .nl-input { flex: 1; padding: 15px 18px; border: none; background: rgba(255,255,255,0.08); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--linen); outline: none; }
+    .nl-input::placeholder { color: rgba(232,224,213,0.35); }
+    .nl-btn { padding: 15px 24px; background: var(--clay); color: white; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background .2s; white-space: nowrap; }
+    .nl-btn:hover { background: var(--sage); }
+    .nl-note { font-size: 0.72rem; color: rgba(232,224,213,0.35); margin-top: 10px; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--deep); color: rgba(232,224,213,0.6); padding: 80px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+    .footer-brand .nav-logo { color: var(--stone); display: block; margin-bottom: 16px; }
+    .footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+    .footer-col h4 { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay); margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col a { text-decoration: none; color: rgba(232,224,213,0.55); font-size: 0.86rem; transition: color .2s; }
+    .footer-col a:hover { color: var(--stone); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid rgba(184,189,181,0.15); font-size: 0.78rem; }
+    .social-links { display: flex; gap: 16px; }
+    .social-link { width: 36px; height: 36px; border: 1px solid rgba(184,189,181,0.25); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--fog); transition: border-color .2s, color .2s; border-radius: 50%; }
+    .social-link:hover { border-color: var(--clay); color: var(--clay); }
+    .social-link svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+    @media (max-width: 1024px) {
+      .journal-hero { grid-template-columns: 1fr; padding: 120px 48px 60px; }
+      .featured { padding: 0 48px; }
+      .featured-card { grid-template-columns: 1fr; }
+      .featured-img { min-height: 300px; }
+      .articles-section, .topics-section, .journal-newsletter, footer { padding-left: 48px; padding-right: 48px; }
+      .articles-grid { grid-template-columns: 1fr 1fr; }
+      .topics-grid { grid-template-columns: repeat(2, 1fr); }
+      .journal-newsletter { grid-template-columns: 1fr; gap: 32px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .journal-hero, .featured, .articles-section, .topics-section, .journal-newsletter, footer { padding-left: 24px; padding-right: 24px; }
+      .featured-content { padding: 32px 28px; }
+      .articles-grid { grid-template-columns: 1fr; }
+      .topics-grid { grid-template-columns: 1fr 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/index.html">Kindly <span>Offerings</span></a>
+  <ul class="nav-links">
+    <li><a href="/shop.html">Shop</a></li>
+    <li><a href="/journal.html" class="active">Journal</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon" aria-label="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <button class="nav-icon cart-badge" aria-label="Cart" onclick="window.location='/cart.html'"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="journal-hero">
+  <div>
+    <p class="hero-eyebrow">Notes from the clearing</p>
+    <h1 class="hero-title">The Kindly<br/><em>Journal</em></h1>
+  </div>
+  <div class="hero-right">
+    <p class="hero-sub">Stories about slow living, outdoor adventure, conscious making, and the people behind the things we carry. Written by our team and the makers we love.</p>
+    <div class="category-pills">
+      <button class="pill active" onclick="filterPill(this)">All</button>
+      <button class="pill" onclick="filterPill(this)">Yoga & Meditation</button>
+      <button class="pill" onclick="filterPill(this)">Outdoor Life</button>
+      <button class="pill" onclick="filterPill(this)">Maker Stories</button>
+      <button class="pill" onclick="filterPill(this)">Pets & Travel</button>
+      <button class="pill" onclick="filterPill(this)">Wellness</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<div class="featured">
+  <div class="featured-card">
+    <div class="featured-img-wrap">
+      <img class="featured-img" src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=75" alt="Mountain trail" loading="eager"/>
+      <span class="featured-tag">Featured</span>
+    </div>
+    <div class="featured-content">
+      <div class="featured-meta">
+        <span>Outdoor Life</span><span class="dot">·</span>
+        <span>June 14, 2026</span><span class="dot">·</span>
+        <span>8 min read</span>
+      </div>
+      <h2 class="featured-title">What a 40-Mile Hike Taught Us About the Things We <em>Carry</em></h2>
+      <p class="featured-excerpt">The Ouachita Trail in Arkansas is 223 miles of pine forest, creek crossings, and quiet. On mile 40, sitting at a cold stream with synthetic gear and plastic bottles, we started asking questions that eventually became this shop.</p>
+      <a href="#" class="btn-read">
+        Read the story
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLES -->
+<div class="articles-section">
+  <div class="articles-header">
+    <h2 class="articles-title">Recent <em>stories</em></h2>
+    <span class="articles-count">24 articles</span>
+  </div>
+  <div class="articles-grid" id="articles-grid">
+
+    <div class="article-card" data-cat="yoga">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1545389336-cf090694435e?w=600&q=70" alt="Yoga mat" loading="lazy"/>
+        <span class="article-tag moss">Yoga</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>May 28, 2026</span><span class="dot">·</span><span>5 min</span></div>
+        <h3 class="article-title">Why Cork is the Only Yoga Mat Material Worth Talking About</h3>
+        <p class="article-excerpt">The grip improves when wet. It self-sanitizes. The tree lives on. Here's everything you need to know about cork's quiet revolution in yoga.</p>
+        <div class="article-foot">
+          <div class="article-author"><div class="author-dot">M</div> Mara H.</div>
+          <span class="article-read-time">5 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="outdoor">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=70" alt="Hammock camping" loading="lazy"/>
+        <span class="article-tag clay">Outdoor Life</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>May 18, 2026</span><span class="dot">·</span><span>6 min</span></div>
+        <h3 class="article-title">The Slow Camper's Guide to Spending a Night in a Hammock</h3>
+        <p class="article-excerpt">Hammock camping isn't just a gear choice — it's a philosophy. Less on the ground, more in the canopy. Here's how to do it right, from setup to sunrise.</p>
+        <div class="article-foot">
+          <div class="article-author"><div class="author-dot">C</div> Cole W.</div>
+          <span class="article-read-time">6 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="maker">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=70" alt="Ceramic studio" loading="lazy"/>
+        <span class="article-tag sage">Maker Story</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>May 8, 2026</span><span class="dot">·</span><span>7 min</span></div>
+        <h3 class="article-title">Three Generations of Clay: Inside Estudio Tierra in Quito</h3>
+        <p class="article-excerpt">Rosa Mendoza learned to throw pottery from her grandmother. Now she teaches her daughters in a sun-powered studio in the Andes. Every mug carries a thumbprint.</p>
+        <div class="article-foot">
+          <div class="article-author"><div class="author-dot">M</div> Mara H.</div>
+          <span class="article-read-time">7 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="pets">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=70" alt="Dog hiking" loading="lazy"/>
+        <span class="article-tag clay">Pets & Travel</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>April 24, 2026</span><span class="dot">·</span><span>4 min</span></div>
+        <h3 class="article-title">How to Hike 10 Miles with Your Dog and Both Enjoy It</h3>
+        <p class="article-excerpt">It took us three failed hikes to figure out the dog carrier backpack, the collapsible bowl, the right leash length. Here's what we learned so you don't have to.</p>
+        <div class="article-foot">
+          <div class="author-dot">C</div>
+          <div class="article-author">Cole W.</div>
+          <span class="article-read-time">4 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="wellness">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=70" alt="Meditation" loading="lazy"/>
+        <span class="article-tag moss">Wellness</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>April 12, 2026</span><span class="dot">·</span><span>5 min</span></div>
+        <h3 class="article-title">The 10-Minute Morning Practice That Changed Everything for Us</h3>
+        <p class="article-excerpt">Not a productivity hack. Not a biohack. Just ten minutes on a buckwheat cushion before the day begins. Here's why it matters more than we expected.</p>
+        <div class="article-foot">
+          <div class="article-author"><div class="author-dot">S</div> Saya I.</div>
+          <span class="article-read-time">5 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="maker">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&q=70" alt="Dried botanicals" loading="lazy"/>
+        <span class="article-tag sage">Maker Story</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>March 30, 2026</span><span class="dot">·</span><span>6 min</span></div>
+        <h3 class="article-title">The Couple Drying Wildflowers in a 200-Year-Old Farmhouse</h3>
+        <p class="article-excerpt">In a Provençal valley where the air smells of lavender and stone, Jean and Marie harvest grasses each August. Their packaging is plantable. Their story is extraordinary.</p>
+        <div class="article-foot">
+          <div class="article-author"><div class="author-dot">M</div> Mara H.</div>
+          <span class="article-read-time">6 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="outdoor">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=70" alt="Kayaking" loading="lazy"/>
+        <span class="article-tag clay">Outdoor Life</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>March 18, 2026</span><span class="dot">·</span><span>5 min</span></div>
+        <h3 class="article-title">A Beginner's Guide to Kayaking the Boundary Waters</h3>
+        <p class="article-excerpt">A million acres of wilderness, no motorboats, and a dry bag between you and your phone. The Boundary Waters is the antidote to everything overscheduled.</p>
+        <div class="article-foot">
+          <div class="article-author"><div class="author-dot">C</div> Cole W.</div>
+          <span class="article-read-time">5 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="yoga">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&q=70" alt="Yoga practice" loading="lazy"/>
+        <span class="article-tag moss">Yoga</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>March 4, 2026</span><span class="dot">·</span><span>7 min</span></div>
+        <h3 class="article-title">Taking Your Practice Outside: Yoga in the Wild</h3>
+        <p class="article-excerpt">A mat on uneven ground. Wind that doesn't care about your alignment. Sounds that replace a playlist. Outdoor yoga is harder and more beautiful than anything indoors.</p>
+        <div class="article-foot">
+          <div class="article-author"><div class="author-dot">S</div> Saya I.</div>
+          <span class="article-read-time">7 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="wellness">
+      <div class="article-img-wrap">
+        <img class="article-img" src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=70" alt="Soap and wellness" loading="lazy"/>
+        <span class="article-tag moss">Wellness</span>
+      </div>
+      <div class="article-content">
+        <div class="article-meta"><span>Feb 18, 2026</span><span class="dot">·</span><span>4 min</span></div>
+        <h3 class="article-title">What Cold-Press Soap Actually Means (and Why It Matters)</h3>
+        <p class="article-excerpt">Most commercial soap strips your skin of everything good. Cold-press soap keeps the glycerin in. Here's the chemistry, and why hinoki changes everything.</p>
+        <div class="article-foot">
+          <div class="article-author"><div class="author-dot">S</div> Saya I.</div>
+          <span class="article-read-time">4 min read</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load more -->
+  <div style="text-align:center;margin-top:48px">
+    <button class="btn-read" style="margin:0 auto" onclick="this.textContent='No more articles to load'">
+      Load more stories
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="topics-section">
+  <div class="topics-header">
+    <p class="topics-eyebrow">Explore by interest</p>
+    <h2 class="topics-title">Browse <em>topics</em></h2>
+  </div>
+  <div class="topics-grid">
+    <div class="topic-card">
+      <img class="topic-img" src="https://images.unsplash.com/photo-1545389336-cf090694435e?w=500&q=70" alt="Yoga" loading="lazy"/>
+      <div class="topic-overlay">
+        <div class="topic-name">Yoga & Meditation</div>
+        <div class="topic-count">8 articles</div>
+      </div>
+    </div>
+    <div class="topic-card">
+      <img class="topic-img" src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&q=70" alt="Outdoor" loading="lazy"/>
+      <div class="topic-overlay">
+        <div class="topic-name">Outdoor Life</div>
+        <div class="topic-count">7 articles</div>
+      </div>
+    </div>
+    <div class="topic-card">
+      <img class="topic-img" src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=500&q=70" alt="Makers" loading="lazy"/>
+      <div class="topic-overlay">
+        <div class="topic-name">Maker Stories</div>
+        <div class="topic-count">5 articles</div>
+      </div>
+    </div>
+    <div class="topic-card">
+      <img class="topic-img" src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=500&q=70" alt="Pets" loading="lazy"/>
+      <div class="topic-overlay">
+        <div class="topic-name">Pets & Travel</div>
+        <div class="topic-count">4 articles</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="journal-newsletter">
+  <div>
+    <p class="nl-eyebrow">Stay in the clearing</p>
+    <h2 class="nl-title">Letters from<br/>the <em>garden</em></h2>
+  </div>
+  <div class="nl-right">
+    <p class="nl-body">New articles, maker stories, and quiet seasonal notes delivered to your inbox. We write when we have something worth saying — not on a schedule.</p>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="Your email address"/>
+      <button class="nl-btn" onclick="this.textContent='Subscribed ✓';this.style.background='var(--sage)'">Subscribe</button>
+    </div>
+    <p class="nl-note">No noise. Unsubscribe anytime.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="nav-logo" href="/index.html">Kindly <span>Offerings</span></a>
+      <p>A considered shop for goods made with care, sourced from the world's most thoughtful makers. Earth-honest. Always.</p>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="/shop.html">New Arrivals</a></li><li><a href="/shop.html">Yoga & Meditation</a></li><li><a href="/shop.html">Camping & Hiking</a></li><li><a href="/shop.html">Traveling with Pets</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="/about.html">Our Story</a></li><li><a href="/journal.html">Journal</a></li><li><a href="/about.html">Sustainability</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a href="/contact.html">Contact</a></li><li><a href="/contact.html">FAQ</a></li><li><a href="/contact.html">Returns</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Kindly Offerings. Made kindly.</span>
+    <div class="social-links">
+      <a href="#" class="social-link"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="#" class="social-link"><svg viewBox="0 0 24 24"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function filterPill(btn) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.textContent.trim().toLowerCase();
+    document.querySelectorAll('.article-card').forEach(card => {
+      if (cat === 'all') { card.style.display = ''; return; }
+      const cardCat = card.dataset.cat || '';
+      const match = cat.includes('yoga') && cardCat === 'yoga' ||
+                    cat.includes('outdoor') && cardCat === 'outdoor' ||
+                    cat.includes('maker') && cardCat === 'maker' ||
+                    cat.includes('pets') && cardCat === 'pets' ||
+                    cat.includes('wellness') && cardCat === 'wellness';
+      card.style.display = match ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
