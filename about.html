@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Kindly Offerings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --stone: #E8E0D5; --linen: #F5F0E8; --sage: #8FA888;
+      --clay: #C4A882; --fog: #B8BDB5; --moss: #3D4D3A;
+      --deep: #2A342A; --off: #6B6B62;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--linen); color: var(--deep); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(245,240,232,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(196,168,130,0.18);
+    }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; letter-spacing: 0.06em; color: var(--moss); text-decoration: none; }
+    .nav-logo span { font-style: italic; color: var(--clay); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--off); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color .2s; }
+    .nav-links a:hover { color: var(--moss); }
+    .nav-links a.active { color: var(--moss); border-bottom: 1px solid var(--clay); padding-bottom: 2px; }
+    .nav-actions { display: flex; gap: 20px; align-items: center; }
+    .nav-icon { background: none; border: none; cursor: pointer; color: var(--off); transition: color .2s; }
+    .nav-icon:hover { color: var(--moss); }
+    .nav-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    .cart-badge { position: relative; }
+    .cart-badge::after { content: '0'; position: absolute; top: -6px; right: -8px; background: var(--clay); color: white; font-size: 0.6rem; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+    /* ── HERO ── */
+    .about-hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 61px;
+      overflow: hidden;
+    }
+    .hero-left {
+      background: var(--moss);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-left-img {
+      position: absolute; inset: 0;
+      background: var(--deep);
+    }
+    .hero-left-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: saturate(0.4) brightness(0.55);
+      mix-blend-mode: luminosity;
+    }
+    .hero-left-content { position: relative; z-index: 1; }
+    .hero-eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--clay); margin-bottom: 20px; }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 4.5vw, 5rem);
+      font-weight: 300; color: var(--linen); line-height: 1.05;
+    }
+    .hero-title em { font-style: italic; color: var(--clay); }
+
+    /* Botanical SVG */
+    .hero-botanical {
+      position: absolute; top: 40px; right: 40px;
+      width: 140px; opacity: 0.15;
+      animation: sway 9s ease-in-out infinite alternate;
+      transform-origin: bottom center;
+    }
+    @keyframes sway { from { transform: rotate(-2deg); } to { transform: rotate(2.5deg); } }
+
+    .hero-right {
+      background: var(--stone);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 72px;
+    }
+    .hero-pull {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 2vw, 1.9rem);
+      font-weight: 300; color: var(--moss);
+      line-height: 1.5; margin-bottom: 32px;
+    }
+    .hero-pull em { font-style: italic; color: var(--clay); }
+    .hero-body { font-size: 0.92rem; color: var(--off); line-height: 1.85; margin-bottom: 36px; max-width: 440px; }
+    .hero-sig {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-style: italic;
+      color: var(--clay); margin-bottom: 4px;
+    }
+    .hero-sig-title { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fog); }
+
+    /* ── MARQUEE ── */
+    .marquee-strip { background: var(--clay); color: white; padding: 13px 0; overflow: hidden; white-space: nowrap; }
+    .marquee-inner { display: inline-flex; animation: marquee 32s linear infinite; }
+    .marquee-inner span { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 36px; }
+    .marquee-inner .dot { opacity: 0.5; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── SHARED STYLES ── */
+    .eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--clay); margin-bottom: 10px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3vw, 3rem); font-weight: 300; color: var(--moss); line-height: 1.12; }
+    .section-title em { font-style: italic; color: var(--clay); }
+
+    /* ── STORY SECTION ── */
+    .story { padding: 100px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; background: var(--linen); }
+    .story-text { }
+    .story-text .section-title { margin-bottom: 28px; }
+    .story-body { font-size: 0.92rem; color: var(--off); line-height: 1.9; }
+    .story-body p { margin-bottom: 18px; }
+    .story-body p:last-child { margin-bottom: 0; }
+    .story-visual { position: relative; }
+    .story-img-main { width: 100%; aspect-ratio: 3/4; object-fit: cover; filter: saturate(0.65); }
+    .story-img-inset {
+      position: absolute; bottom: -32px; left: -32px;
+      width: 55%; aspect-ratio: 1;
+      object-fit: cover; filter: saturate(0.6);
+      border: 6px solid var(--linen);
+    }
+    .story-caption {
+      position: absolute; top: 24px; right: -20px;
+      background: var(--clay); color: white;
+      padding: 16px 20px; max-width: 160px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; line-height: 1.3; font-style: italic;
+    }
+
+    /* ── VALUES ── */
+    .values { background: var(--stone); padding: 100px 80px; }
+    .values-header { text-align: center; margin-bottom: 64px; }
+    .values-header .section-title { font-size: clamp(2.2rem, 3.5vw, 3.4rem); }
+    .values-header p { font-size: 0.92rem; color: var(--off); max-width: 480px; margin: 20px auto 0; line-height: 1.75; }
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .value-card {
+      background: white; padding: 48px 40px;
+      display: flex; flex-direction: column;
+      transition: background .25s;
+    }
+    .value-card:hover { background: var(--moss); }
+    .value-card:hover .value-icon svg { stroke: var(--clay); }
+    .value-card:hover .value-name { color: var(--linen); }
+    .value-card:hover .value-body { color: rgba(232,224,213,0.7); }
+    .value-card:hover .value-num { color: rgba(196,168,130,0.3); }
+    .value-icon { margin-bottom: 28px; }
+    .value-icon svg { width: 32px; height: 32px; stroke: var(--sage); fill: none; stroke-width: 1.4; transition: stroke .25s; }
+    .value-num { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; color: rgba(184,189,181,0.25); line-height: 1; margin-bottom: -8px; transition: color .25s; }
+    .value-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--moss); margin-bottom: 14px; transition: color .25s; }
+    .value-body { font-size: 0.84rem; color: var(--off); line-height: 1.75; transition: color .25s; }
+
+    /* ── PROCESS ── */
+    .process { padding: 100px 80px; background: var(--linen); }
+    .process-header { max-width: 560px; margin-bottom: 64px; }
+    .process-header .section-title { margin-bottom: 16px; }
+    .process-header p { font-size: 0.9rem; color: var(--off); line-height: 1.75; }
+    .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+    .process-steps::before {
+      content: '';
+      position: absolute; top: 24px; left: 10%; right: 10%;
+      height: 1px; background: rgba(196,168,130,0.35);
+      z-index: 0;
+    }
+    .process-step { padding: 0 24px; position: relative; z-index: 1; }
+    .step-dot {
+      width: 48px; height: 48px; background: var(--linen);
+      border: 2px solid var(--clay); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; color: var(--clay); margin-bottom: 24px;
+    }
+    .step-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--moss); margin-bottom: 10px; }
+    .step-body { font-size: 0.82rem; color: var(--off); line-height: 1.7; }
+
+    /* ── IMPACT ── */
+    .impact { background: var(--moss); color: var(--stone); padding: 100px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .impact-visual { position: relative; }
+    .impact-img { width: 100%; aspect-ratio: 4/5; object-fit: cover; filter: saturate(0.4) brightness(0.7); }
+    .impact-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(61,77,58,0.3) 0%, transparent 60%);
+    }
+    .impact-stat-card {
+      position: absolute; bottom: -24px; right: -24px;
+      background: var(--clay); color: white;
+      padding: 28px 32px; min-width: 180px;
+    }
+    .impact-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; line-height: 1; }
+    .impact-stat-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px; opacity: 0.85; }
+    .impact-content { }
+    .impact .eyebrow { color: var(--clay); }
+    .impact .section-title { color: var(--linen); margin-bottom: 28px; }
+    .impact-body { font-size: 0.92rem; color: rgba(232,224,213,0.72); line-height: 1.85; margin-bottom: 48px; }
+    .impact-body p { margin-bottom: 16px; }
+    .impact-numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .impact-num { }
+    .impact-num-val { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 300; color: var(--clay); line-height: 1; margin-bottom: 6px; }
+    .impact-num-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,224,213,0.5); }
+
+    /* ── TEAM ── */
+    .team { padding: 100px 80px; background: var(--stone); }
+    .team-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 56px; }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .team-card { background: white; overflow: hidden; }
+    .team-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; filter: saturate(0.6); transition: filter .4s, transform .5s; }
+    .team-card:hover .team-img { filter: saturate(0.8); transform: scale(1.03); }
+    .team-img-wrap { overflow: hidden; }
+    .team-info { padding: 24px; }
+    .team-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--moss); margin-bottom: 4px; }
+    .team-role { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--clay); margin-bottom: 12px; }
+    .team-bio { font-size: 0.82rem; color: var(--off); line-height: 1.65; }
+
+    /* ── MAKERS ── */
+    .makers { padding: 100px 80px; background: var(--linen); }
+    .makers-header { margin-bottom: 56px; max-width: 560px; }
+    .makers-header .section-title { margin-bottom: 16px; }
+    .makers-header p { font-size: 0.9rem; color: var(--off); line-height: 1.75; }
+    .makers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .maker-card {
+      display: grid; grid-template-columns: 140px 1fr;
+      background: white; overflow: hidden;
+      transition: box-shadow .3s;
+    }
+    .maker-card:hover { box-shadow: 0 6px 28px rgba(61,77,58,0.09); }
+    .maker-img { width: 140px; object-fit: cover; filter: saturate(0.6); }
+    .maker-info { padding: 28px 28px 28px 24px; }
+    .maker-flag { font-size: 1.1rem; margin-bottom: 8px; }
+    .maker-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--moss); margin-bottom: 4px; }
+    .maker-location { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--clay); margin-bottom: 10px; }
+    .maker-bio { font-size: 0.8rem; color: var(--off); line-height: 1.65; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      padding: 100px 80px; background: var(--deep); text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-banner-bg {
+      position: absolute; inset: 0;
+    }
+    .cta-banner-bg img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.3) brightness(0.25); }
+    .cta-banner-content { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+    .cta-banner .eyebrow { color: var(--clay); margin-bottom: 16px; }
+    .cta-banner-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      font-weight: 300; color: var(--linen); line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .cta-banner-title em { font-style: italic; color: var(--clay); }
+    .cta-banner p { font-size: 0.92rem; color: rgba(232,224,213,0.65); line-height: 1.75; margin-bottom: 40px; max-width: 440px; margin-left: auto; margin-right: auto; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--clay); color: white; border: none; padding: 16px 36px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background .25s; }
+    .btn-primary:hover { background: var(--sage); }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--linen); border: 1px solid rgba(232,224,213,0.35); padding: 16px 36px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: all .25s; }
+    .btn-ghost:hover { background: rgba(245,240,232,0.1); border-color: var(--linen); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--deep); color: rgba(232,224,213,0.6); padding: 80px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+    .footer-brand .nav-logo { color: var(--stone); display: block; margin-bottom: 16px; }
+    .footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+    .footer-col h4 { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay); margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col a { text-decoration: none; color: rgba(232,224,213,0.55); font-size: 0.86rem; transition: color .2s; }
+    .footer-col a:hover { color: var(--stone); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid rgba(184,189,181,0.15); font-size: 0.78rem; }
+    .social-links { display: flex; gap: 16px; }
+    .social-link { width: 36px; height: 36px; border: 1px solid rgba(184,189,181,0.25); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--fog); transition: border-color .2s, color .2s; border-radius: 50%; }
+    .social-link:hover { border-color: var(--clay); color: var(--clay); }
+    .social-link svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .about-hero, .story, .impact { grid-template-columns: 1fr; }
+      .about-hero { min-height: auto; }
+      .hero-left { min-height: 60vh; }
+      .hero-right { padding: 60px 48px; }
+      .story { padding: 72px 48px; gap: 48px; }
+      .story-img-inset { display: none; }
+      .story-caption { display: none; }
+      .values-grid { grid-template-columns: 1fr 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; gap: 48px; }
+      .process-steps::before { display: none; }
+      .impact { gap: 48px; padding: 72px 48px; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .makers-grid { grid-template-columns: 1fr; }
+      footer { padding: 60px 48px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero-left, .hero-right { padding: 48px 28px; }
+      .story, .values, .process, .impact, .team, .makers, .cta-banner, footer { padding-left: 24px; padding-right: 24px; }
+      .values-grid { grid-template-columns: 1fr; gap: 2px; }
+      .process-steps { grid-template-columns: 1fr; gap: 36px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .maker-card { grid-template-columns: 1fr; }
+      .maker-img { width: 100%; height: 200px; }
+      .footer-top { grid-template-columns: 1fr; }
+      .impact-numbers { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="index.html">Kindly <span>Offerings</span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="#">Collections</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="#">Journal</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon" aria-label="Search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <button class="nav-icon cart-badge" aria-label="Cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="about-hero">
+  <div class="hero-left">
+    <div class="hero-left-img">
+      <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=75" alt="Forest path" loading="eager"/>
+    </div>
+    <!-- Botanical accent -->
+    <svg class="hero-botanical" viewBox="0 0 200 340" fill="none">
+      <path d="M100 320 C100 320 100 40 100 20" stroke="white" stroke-width="1.5"/>
+      <path d="M100 220 C70 200 30 180 20 140 C50 155 80 175 100 220Z" fill="white"/>
+      <path d="M100 200 C130 175 170 155 180 110 C145 130 115 160 100 200Z" fill="white"/>
+      <path d="M100 160 C75 140 45 115 40 75 C70 95 95 125 100 160Z" fill="white"/>
+      <path d="M100 140 C125 115 155 90 165 50 C130 72 108 105 100 140Z" fill="white"/>
+      <ellipse cx="100" cy="20" rx="7" ry="9" fill="white"/>
+    </svg>
+    <div class="hero-left-content">
+      <p class="hero-eyebrow">Our story</p>
+      <h1 class="hero-title">Born from a<br/>love of <em>slow</em><br/>living</h1>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <p class="hero-pull">
+      We started Kindly Offerings because we were tired of buying things that <em>cost the earth</em> to make it.
+    </p>
+    <p class="hero-body">
+      Not just financially — but literally. Products wrapped in plastics, shipped from factories with no names, made by hands we'd never know. We wanted something different. A shop where every single item could answer the question: <em>where did you come from, and were you made with care?</em>
+      <br/><br/>
+      So we built it. Kindly Offerings is a curated dropshipping store — which means we hold no inventory, work directly with vetted makers and suppliers around the world, and ship straight to you. No warehouse. No waste. Just carefully chosen goods, moving from the hands that made them to the home that needs them.
+    </p>
+    <div class="hero-sig">Mara & Cole</div>
+    <div class="hero-sig-title">Founders, Kindly Offerings · Allen, Texas</div>
+  </div>
+</div>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-inner">
+    <span>Earth-honest goods</span><span class="dot">·</span>
+    <span>120+ vetted makers</span><span class="dot">·</span>
+    <span>Zero plastic packaging</span><span class="dot">·</span>
+    <span>1% to reforestation</span><span class="dot">·</span>
+    <span>34 countries sourced</span><span class="dot">·</span>
+    <span>Kindly, always</span><span class="dot">·</span>
+    <span>Earth-honest goods</span><span class="dot">·</span>
+    <span>120+ vetted makers</span><span class="dot">·</span>
+    <span>Zero plastic packaging</span><span class="dot">·</span>
+    <span>1% to reforestation</span><span class="dot">·</span>
+    <span>34 countries sourced</span><span class="dot">·</span>
+    <span>Kindly, always</span><span class="dot">·</span>
+  </div>
+</div>
+
+<!-- ── STORY ── -->
+<div class="story">
+  <div class="story-text">
+    <p class="eyebrow">How it began</p>
+    <h2 class="section-title">A weekend hike<br/>that changed <em>everything</em></h2>
+    <div class="story-body" style="margin-top:28px">
+      <p>In 2022, Mara and Cole hiked the Ouachita Trail in Arkansas. They'd packed the usual kit — synthetic gear, fast-fashion layers, plastic water bottles — and somewhere around mile 40, sitting at a creek, they started talking about how disconnected the things they carried felt from the place they were in.</p>
+      <p>They came home and started researching. What they found surprised them: there were hundreds of small makers worldwide — cork farmers in Portugal, bamboo weavers in Vietnam, botanical soap makers in Kyoto — producing extraordinary goods that most people never found, buried beneath mass-market results.</p>
+      <p>Kindly Offerings was the answer to that problem. A single place to find goods made with real hands, real materials, and a real regard for the world they come from. We choose every product the way you'd choose a gift for someone you love — carefully, with thought for what it took to make it and what it'll mean to receive it.</p>
+    </div>
+  </div>
+  <div class="story-visual">
+    <img class="story-img-main" src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=75" alt="Mountain landscape"/>
+    <img class="story-img-inset" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=70" alt="Forest trail"/>
+    <div class="story-caption">"Made with gentle intention."</div>
+  </div>
+</div>
+
+<!-- ── VALUES ── -->
+<div class="values">
+  <div class="values-header">
+    <p class="eyebrow">What we stand by</p>
+    <h2 class="section-title">The <em>principles</em><br/>behind every product</h2>
+    <p>These aren't marketing words. They're the actual checklist we run every supplier through before a single product goes live on the shop.</p>
+  </div>
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="value-num">01</div>
+      <div class="value-name">Material Honesty</div>
+      <div class="value-body">We only carry products made from materials that can be named and traced. Natural rubber, organic cotton, cork, beeswax, bamboo, recycled stainless steel. If the ingredient list reads like a chemistry exam, it doesn't come here.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="value-num">02</div>
+      <div class="value-name">Fair Hands</div>
+      <div class="value-body">Every supplier we work with must demonstrate fair wages and safe working conditions. We ask, we verify, and we visit when we can. The people who make these things matter as much as what they make.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+      <div class="value-num">03</div>
+      <div class="value-name">Light Footprint</div>
+      <div class="value-body">All orders ship plastic-free in recycled or compostable packaging. We offset 100% of shipping emissions through reforestation partners. Every order plants one tree. We measure what we do to the earth.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <div class="value-num">04</div>
+      <div class="value-name">Genuine Curation</div>
+      <div class="value-body">We turn down more products than we accept. There is no algorithm choosing what goes on this shop. Every item is reviewed by a human who has asked: does this belong here? Does it carry kindness in how it was made?</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <div class="value-num">05</div>
+      <div class="value-name">Global but Local</div>
+      <div class="value-body">We source from 34 countries because good making knows no borders. But we work with regional distribution wherever possible to reduce transit distances — and we always tell you exactly where your order is coming from.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="value-num">06</div>
+      <div class="value-name">Long Life Design</div>
+      <div class="value-body">We don't carry trend products. Every item on this shop is designed to last — to be used, repaired, and loved for years. A yoga mat that becomes part of your practice. A mug that earns its place on your shelf. Things worth keeping.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROCESS ── -->
+<div class="process">
+  <div class="process-header">
+    <p class="eyebrow">How we source</p>
+    <h2 class="section-title">The <em>Kindly</em> Standard</h2>
+    <p>Every product on this site has passed through the same four-step review. It's slower than just clicking "import" from a catalog. That's the point.</p>
+  </div>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-dot">01</div>
+      <div class="step-title">Discovery</div>
+      <div class="step-body">We find makers through referrals, trade shows, supplier networks, and our own field research. We're always looking for people who make things in ways worth telling a story about.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-dot">02</div>
+      <div class="step-title">Vetting</div>
+      <div class="step-body">We ask every supplier about their materials, labor practices, packaging, and environmental impact. We request documentation, visit when possible, and check third-party certifications.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-dot">03</div>
+      <div class="step-title">Sampling</div>
+      <div class="step-body">We order samples of every product before it goes live. We use them, wash them, test them. If it doesn't hold up, it doesn't ship to you. We've turned down dozens of products at this stage.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-dot">04</div>
+      <div class="step-title">Ongoing Review</div>
+      <div class="step-body">We re-evaluate suppliers annually. Quality can drift. Ownership can change. We stay in relationship with our makers so we know when something has shifted — and act on it if it has.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── IMPACT ── -->
+<div class="impact">
+  <div class="impact-visual">
+    <img class="impact-img" src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=75" alt="Forest and hands in soil"/>
+    <div class="impact-overlay"></div>
+    <div class="impact-stat-card">
+      <div class="impact-stat-num">4,200+</div>
+      <div class="impact-stat-label">Trees planted to date</div>
+    </div>
+  </div>
+  <div class="impact-content">
+    <p class="eyebrow">Our impact</p>
+    <h2 class="section-title">We give 1% of every<br/>sale back to the <em>earth</em></h2>
+    <div class="impact-body">
+      <p>Through our partnership with One Tree Planted, every order on Kindly Offerings funds the planting of one tree in a reforestation zone matched to the ecosystem of your purchase — Pacific Northwest for camping gear, Atlantic Forest for Brazilian cotton products, Borneo for rubber-based items.</p>
+      <p>We also offset 100% of shipping emissions through a verified carbon offset program, and all packaging is either recycled, compostable, or returnable. Our goal by 2027 is to be carbon-negative across the full supply chain.</p>
+    </div>
+    <div class="impact-numbers">
+      <div class="impact-num"><div class="impact-num-val">4,200+</div><div class="impact-num-label">Trees planted</div></div>
+      <div class="impact-num"><div class="impact-num-val">100%</div><div class="impact-num-label">Emissions offset</div></div>
+      <div class="impact-num"><div class="impact-num-val">0</div><div class="impact-num-label">Plastic used</div></div>
+      <div class="impact-num"><div class="impact-num-val">120+</div><div class="impact-num-label">Vetted makers</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TEAM ── -->
+<div class="team">
+  <div class="team-header">
+    <div>
+      <p class="eyebrow">The people</p>
+      <h2 class="section-title">Who makes <em>Kindly</em></h2>
+    </div>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-img-wrap">
+        <img class="team-img" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&q=70" alt="Mara" loading="lazy"/>
+      </div>
+      <div class="team-info">
+        <div class="team-name">Mara Holden</div>
+        <div class="team-role">Co-Founder · Head of Curation</div>
+        <div class="team-bio">Former environmental scientist turned maker-advocate. Mara reviews every supplier and tests every sample. She's hiked the Ouachita, the PCT, and the Camino — and brings that ground-level perspective to every product decision.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-img-wrap">
+        <img class="team-img" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=70" alt="Cole" loading="lazy"/>
+      </div>
+      <div class="team-info">
+        <div class="team-name">Cole Whitaker</div>
+        <div class="team-role">Co-Founder · Operations</div>
+        <div class="team-bio">Cole handles supplier relationships, logistics, and the quiet machinery that gets your order from a maker's hands to your door. Kayaker, dog dad, and the person who made sure kindlyofferings.com actually works.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-img-wrap">
+        <img class="team-img" src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600&q=70" alt="Saya" loading="lazy"/>
+      </div>
+      <div class="team-info">
+        <div class="team-name">Saya Inoue</div>
+        <div class="team-role">Maker Relations · Asia Pacific</div>
+        <div class="team-bio">Based in Kyoto, Saya manages our relationships with makers across Japan, Vietnam, and Korea. Yoga teacher, tea ceremony practitioner, and the reason our Japanese suppliers are so extraordinary.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAKERS ── -->
+<div class="makers">
+  <div class="makers-header">
+    <p class="eyebrow">The people behind the products</p>
+    <h2 class="section-title">A few of our <em>makers</em></h2>
+    <p>We believe you should know who made the things you bring into your home. Here are four of the makers whose work you'll find across our shop.</p>
+  </div>
+  <div class="makers-grid">
+    <div class="maker-card">
+      <img class="maker-img" src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=300&q=70" alt="Ceramic studio Ecuador"/>
+      <div class="maker-info">
+        <div class="maker-flag">🇪🇨</div>
+        <div class="maker-name">Estudio Tierra</div>
+        <div class="maker-location">Quito, Ecuador</div>
+        <div class="maker-bio">Three generations of potters making stoneware from reclaimed Andean clay. Rosa and her daughters throw every piece by hand in a studio powered entirely by solar. No two mugs are the same — each carries a thumbprint.</div>
+      </div>
+    </div>
+    <div class="maker-card">
+      <img class="maker-img" src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=300&q=70" alt="Botanical studio France"/>
+      <div class="maker-info">
+        <div class="maker-flag">🇫🇷</div>
+        <div class="maker-name">Le Séchoir Sauvage</div>
+        <div class="maker-location">Provence, France</div>
+        <div class="maker-bio">A husband and wife team who harvest wild grasses and botanicals from the Provençal countryside each summer, dry them in a 200-year-old farmhouse, and ship them in seed-paper packaging you can plant in spring.</div>
+      </div>
+    </div>
+    <div class="maker-card">
+      <img class="maker-img" src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&q=70" alt="Wellness studio Japan"/>
+      <div class="maker-info">
+        <div class="maker-flag">🇯🇵</div>
+        <div class="maker-name">Hinoki Workshop</div>
+        <div class="maker-location">Kyoto, Japan</div>
+        <div class="maker-bio">A small family soap and body care studio in the hills north of Kyoto, specializing in hinoki cypress — Japan's sacred wood. Cold-pressed, minimal ingredients, and aged the way good things should be.</div>
+      </div>
+    </div>
+    <div class="maker-card">
+      <img class="maker-img" src="https://images.unsplash.com/photo-1545389336-cf090694435e?w=300&q=70" alt="Cork mat studio Portugal"/>
+      <div class="maker-info">
+        <div class="maker-flag">🇵🇹</div>
+        <div class="maker-name">Corticeira do Vale</div>
+        <div class="maker-location">Alentejo, Portugal</div>
+        <div class="maker-bio">A fourth-generation cork farm and workshop in the Alentejo plains. The oak trees here are over 150 years old. Miguel and his team harvest bark by hand every nine years — the tree lives on, untouched at its core.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CTA BANNER ── -->
+<div class="cta-banner">
+  <div class="cta-banner-bg">
+    <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1400&q=70" alt="Mountain landscape" loading="lazy"/>
+  </div>
+  <div class="cta-banner-content">
+    <p class="eyebrow">Ready to shop kindly?</p>
+    <h2 class="cta-banner-title">Find something made<br/>with <em>gentle intention</em></h2>
+    <p>Every product in the shop is here because someone asked: is this worth making? We think the answer is yes. Come see what we found.</p>
+    <div class="cta-btns">
+      <a href="shop.html" class="btn-primary">
+        Explore the shop
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#" class="btn-ghost">Read our journal</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="nav-logo" href="index.html">Kindly <span>Offerings</span></a>
+      <p>A considered shop for goods made with care, sourced from the world's most thoughtful makers. Earth-honest. Always.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Yoga & Meditation</a></li>
+        <li><a href="#">Camping & Hiking</a></li>
+        <li><a href="#">Traveling with Pets</a></li>
+        <li><a href="#">Printed Items</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="about.html">Our Story</a></li>
+        <li><a href="#">Maker Standards</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Sustainability</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#">Shipping & Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Size Guide</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Kindly Offerings. Made kindly.</span>
+    <div class="social-links">
+      <a href="#" class="social-link" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="#" class="social-link" aria-label="Pinterest">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.03-2.83.19-.77 1.27-5.38 1.27-5.38s-.32-.65-.32-1.61c0-1.51.88-2.64 1.97-2.64.93 0 1.38.7 1.38 1.54 0 .94-.6 2.34-.91 3.64-.26 1.09.54 1.97 1.6 1.97 1.93 0 3.41-2.03 3.41-4.97 0-2.6-1.87-4.41-4.54-4.41-3.09 0-4.9 2.31-4.9 4.7 0 .93.36 1.93.8 2.47.09.11.1.2.07.31-.08.33-.26 1.09-.3 1.24-.05.2-.17.24-.38.15-1.4-.65-2.28-2.7-2.28-4.35 0-3.53 2.57-6.78 7.41-6.78 3.89 0 6.91 2.77 6.91 6.47 0 3.86-2.43 6.97-5.8 6.97-1.13 0-2.2-.59-2.57-1.28l-.7 2.6c-.25.97-.93 2.18-1.39 2.92.42.13.87.2 1.33.2C17.52 22 22 17.52 22 12S17.52 2 12 2z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — Kindly Offerings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --stone:   #E8E0D5;
+      --linen:   #F5F0E8;
+      --sage:    #8FA888;
+      --clay:    #C4A882;
+      --fog:     #B8BDB5;
+      --moss:    #3D4D3A;
+      --deep:    #2A342A;
+      --off:     #6B6B62;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--linen);
+      color: var(--deep);
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(196,168,130,0.18);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 400;
+      letter-spacing: 0.06em; color: var(--moss);
+      text-decoration: none;
+    }
+    .nav-logo span { font-style: italic; color: var(--clay); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--off);
+      font-size: 0.82rem; letter-spacing: 0.1em;
+      text-transform: uppercase; transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--moss); }
+    .nav-links a.active { border-bottom: 1px solid var(--clay); padding-bottom: 2px; }
+    .nav-actions { display: flex; gap: 20px; align-items: center; }
+    .nav-icon { background: none; border: none; cursor: pointer; color: var(--off); transition: color .2s; }
+    .nav-icon:hover { color: var(--moss); }
+    .nav-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    .cart-badge { position: relative; }
+    .cart-badge::after {
+      content: '0'; position: absolute; top: -6px; right: -8px;
+      background: var(--clay); color: white; font-size: 0.6rem;
+      width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 140px 80px 60px;
+      background: var(--stone);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: 40px;
+      border-bottom: 1px solid rgba(184,189,181,0.4);
+    }
+    .page-eyebrow {
+      font-size: 0.72rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--clay);
+      margin-bottom: 12px;
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4vw, 4rem);
+      font-weight: 300; color: var(--moss); line-height: 1.05;
+    }
+    .page-title em { font-style: italic; color: var(--clay); }
+    .page-sub {
+      font-size: 0.9rem; color: var(--off);
+      line-height: 1.75; max-width: 400px;
+      align-self: end;
+    }
+    .product-count {
+      font-size: 0.75rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--fog);
+      margin-top: 8px;
+    }
+
+    /* ── SHOP LAYOUT ── */
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 80vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--stone);
+      padding: 40px 32px;
+      border-right: 1px solid rgba(184,189,181,0.35);
+      position: sticky;
+      top: 61px;
+      height: calc(100vh - 61px);
+      overflow-y: auto;
+    }
+
+    .sidebar-section { margin-bottom: 36px; }
+    .sidebar-label {
+      font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--clay);
+      margin-bottom: 14px; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(184,189,181,0.35);
+    }
+
+    /* Search */
+    .sidebar-search {
+      display: flex; align-items: center; gap: 10px;
+      border: 1px solid var(--fog);
+      background: white; padding: 10px 14px;
+      margin-bottom: 32px;
+    }
+    .sidebar-search input {
+      flex: 1; border: none; background: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.83rem; color: var(--deep); outline: none;
+    }
+    .sidebar-search input::placeholder { color: var(--fog); }
+    .sidebar-search svg { width: 15px; height: 15px; stroke: var(--fog); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+
+    /* Category filters */
+    .filter-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .filter-list li button {
+      width: 100%; text-align: left; background: none; border: none;
+      padding: 9px 12px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.83rem; color: var(--off); cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background .15s, color .15s;
+    }
+    .filter-list li button:hover { background: rgba(143,168,136,0.1); color: var(--moss); }
+    .filter-list li button.active { background: var(--moss); color: var(--linen); }
+    .filter-list li button .count {
+      font-size: 0.7rem; opacity: 0.6;
+    }
+
+    /* Price range */
+    .price-inputs { display: flex; gap: 8px; align-items: center; }
+    .price-inputs input {
+      flex: 1; border: 1px solid var(--fog); background: white;
+      padding: 8px 12px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; color: var(--deep); outline: none;
+      width: 80px;
+    }
+    .price-inputs span { font-size: 0.8rem; color: var(--fog); }
+
+    /* Sort */
+    .sort-select {
+      width: 100%; border: 1px solid var(--fog); background: white;
+      padding: 9px 12px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; color: var(--off); outline: none; cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B8BDB5' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    /* Tag filter */
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      padding: 5px 12px; font-size: 0.7rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      border: 1px solid var(--fog); background: transparent;
+      color: var(--off); cursor: pointer; transition: all .2s;
+    }
+    .tag:hover, .tag.active { background: var(--clay); border-color: var(--clay); color: white; }
+
+    /* Clear filters */
+    .clear-btn {
+      width: 100%; padding: 10px; background: none;
+      border: 1px solid rgba(184,189,181,0.5);
+      font-family: 'DM Sans', sans-serif; font-size: 0.75rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--off); cursor: pointer; transition: all .2s;
+      margin-top: 8px;
+    }
+    .clear-btn:hover { border-color: var(--moss); color: var(--moss); }
+
+    /* ── MAIN GRID ── */
+    .shop-main { padding: 40px 48px; background: var(--linen); }
+
+    .shop-toolbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 32px; padding-bottom: 20px;
+      border-bottom: 1px solid rgba(184,189,181,0.3);
+    }
+    .toolbar-left {
+      font-size: 0.82rem; color: var(--off);
+    }
+    .toolbar-left span { color: var(--moss); font-weight: 500; }
+    .view-toggle { display: flex; gap: 6px; }
+    .view-btn {
+      width: 34px; height: 34px; border: 1px solid var(--fog);
+      background: none; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      color: var(--fog); transition: all .2s;
+    }
+    .view-btn.active, .view-btn:hover { border-color: var(--moss); color: var(--moss); }
+    .view-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+    /* Product Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      transition: all .3s;
+    }
+    .products-grid.view-2 { grid-template-columns: repeat(2, 1fr); }
+    .products-grid.view-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .product-card {
+      background: white;
+      display: flex; flex-direction: column;
+      transition: box-shadow .3s, transform .2s;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      box-shadow: 0 8px 40px rgba(61,77,58,0.10);
+      transform: translateY(-2px);
+    }
+
+    .product-img-wrap {
+      position: relative; overflow: hidden;
+      aspect-ratio: 1; background: var(--stone);
+    }
+    .product-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: saturate(0.72);
+      transition: transform .5s ease, filter .4s;
+    }
+    .product-card:hover .product-img-wrap img { transform: scale(1.06); filter: saturate(0.9); }
+
+    .product-badge {
+      position: absolute; top: 14px; left: 14px;
+      background: var(--clay); color: white;
+      font-size: 0.62rem; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 4px 10px;
+      z-index: 1;
+    }
+    .product-badge.new { background: var(--moss); }
+    .product-badge.sale { background: #a06060; }
+
+    .product-wishlist {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(245,240,232,0.92); border: none;
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; transition: opacity .2s;
+      color: var(--moss); z-index: 1;
+    }
+    .product-wishlist svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    .product-card:hover .product-wishlist { opacity: 1; }
+
+    .quick-view {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(42,52,42,0.88);
+      color: var(--linen); border: none;
+      padding: 12px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.12em;
+      text-transform: uppercase; cursor: pointer;
+      opacity: 0; transform: translateY(4px);
+      transition: opacity .25s, transform .25s;
+      z-index: 1;
+    }
+    .product-card:hover .quick-view { opacity: 1; transform: translateY(0); }
+
+    .product-info { padding: 18px 18px 22px; flex: 1; display: flex; flex-direction: column; }
+    .product-origin {
+      font-size: 0.66rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--fog); margin-bottom: 6px;
+    }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-weight: 400;
+      color: var(--deep); line-height: 1.3; margin-bottom: 12px;
+      flex: 1;
+    }
+
+    /* Stars */
+    .product-stars { display: flex; align-items: center; gap: 5px; margin-bottom: 12px; }
+    .stars { color: var(--clay); font-size: 0.7rem; letter-spacing: 1px; }
+    .review-count { font-size: 0.7rem; color: var(--fog); }
+
+    .product-foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .product-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; color: var(--moss);
+    }
+    .product-price .old {
+      font-size: 0.88rem; color: var(--fog);
+      text-decoration: line-through; margin-right: 6px;
+    }
+
+    .btn-add {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--moss); color: var(--linen); border: none;
+      padding: 10px 18px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer; transition: background .2s;
+    }
+    .btn-add:hover { background: var(--deep); }
+    .btn-add svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ── COLLECTION BANNER ── */
+    .collection-banner {
+      grid-column: 1 / -1;
+      position: relative; overflow: hidden;
+      height: 200px; margin-bottom: 8px;
+      display: none;
+    }
+    .collection-banner.visible { display: block; }
+    .collection-banner img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: saturate(0.6) brightness(0.75);
+    }
+    .collection-banner-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; padding: 40px;
+      background: linear-gradient(to right, rgba(42,52,42,0.7) 0%, transparent 60%);
+    }
+    .collection-banner-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem; font-weight: 300;
+      color: var(--linen); line-height: 1.1;
+    }
+    .collection-banner-title em { font-style: italic; color: var(--clay); }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex; justify-content: center; align-items: center;
+      gap: 6px; margin-top: 56px; padding-top: 40px;
+      border-top: 1px solid rgba(184,189,181,0.3);
+    }
+    .page-btn {
+      width: 38px; height: 38px; display: flex;
+      align-items: center; justify-content: center;
+      border: 1px solid var(--fog); background: none;
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+      color: var(--off); cursor: pointer; transition: all .2s;
+    }
+    .page-btn:hover, .page-btn.active {
+      background: var(--moss); border-color: var(--moss); color: white;
+    }
+    .page-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--deep); color: rgba(232,224,213,0.6);
+      padding: 80px;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px; margin-bottom: 64px;
+    }
+    .footer-brand .nav-logo { color: var(--stone); display: block; margin-bottom: 16px; }
+    .footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+    .footer-col h4 {
+      font-size: 0.72rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--clay); margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col a {
+      text-decoration: none; color: rgba(232,224,213,0.55);
+      font-size: 0.86rem; transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--stone); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 32px; border-top: 1px solid rgba(184,189,181,0.15);
+      font-size: 0.78rem;
+    }
+    .social-links { display: flex; gap: 16px; }
+    .social-link {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(184,189,181,0.25);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; color: var(--fog);
+      transition: border-color .2s, color .2s; border-radius: 50%;
+    }
+    .social-link:hover { border-color: var(--clay); color: var(--clay); }
+    .social-link svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .products-grid.view-4 { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 860px) {
+      .shop-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; display: none; }
+      .sidebar.open { display: block; }
+      .page-header { grid-template-columns: 1fr; padding: 120px 32px 40px; }
+      .shop-main { padding: 32px 24px; }
+      footer { padding: 48px 24px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .products-grid, .products-grid.view-2, .products-grid.view-4 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="index.html">Kindly <span>Offerings</span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html" class="active">Shop</a></li>
+    <li><a href="#">Collections</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Journal</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon" aria-label="Search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <button class="nav-icon cart-badge" aria-label="Cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">Curated from nature's finest makers</p>
+    <h1 class="page-title">The <em>Shop</em></h1>
+    <p class="product-count" id="product-count">Showing 18 products</p>
+  </div>
+  <p class="page-sub">Every item chosen with care — for the way you move, rest, explore, and come home to yourself.</p>
+</div>
+
+<!-- ── SHOP LAYOUT ── -->
+<div class="shop-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search products…" id="search-input"/>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Collections</div>
+      <ul class="filter-list" id="category-filters">
+        <li><button class="active" data-cat="all">All Products <span class="count">48</span></button></li>
+        <li><button data-cat="yoga">Yoga & Meditation <span class="count">12</span></button></li>
+        <li><button data-cat="camping">Camping & Hiking <span class="count">9</span></button></li>
+        <li><button data-cat="pets">Traveling with Pets <span class="count">7</span></button></li>
+        <li><button data-cat="wellness">Wellness & Health <span class="count">6</span></button></li>
+        <li><button data-cat="kayaking">Kayaking <span class="count">4</span></button></li>
+        <li><button data-cat="climbing">Rock Climbing <span class="count">5</span></button></li>
+        <li><button data-cat="printed">Printed Items <span class="count">8</span></button></li>
+        <li><button data-cat="home">Eco Home <span class="count">7</span></button></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Sort By</div>
+      <select class="sort-select" id="sort-select">
+        <option value="featured">Featured</option>
+        <option value="newest">Newest First</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="bestselling">Best Selling</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Price Range</div>
+      <div class="price-inputs">
+        <input type="number" placeholder="$0" min="0" id="price-min"/>
+        <span>—</span>
+        <input type="number" placeholder="$200" max="500" id="price-max"/>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Tags</div>
+      <div class="tag-cloud">
+        <button class="tag active">Eco</button>
+        <button class="tag">Organic</button>
+        <button class="tag">Handmade</button>
+        <button class="tag">On Sale</button>
+        <button class="tag">New</button>
+        <button class="tag">Bestseller</button>
+        <button class="tag">Gift</button>
+        <button class="tag">Under $30</button>
+      </div>
+    </div>
+
+    <button class="clear-btn" id="clear-filters">Clear All Filters</button>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="shop-main">
+
+    <div class="shop-toolbar">
+      <div class="toolbar-left">Showing <span id="showing-count">18</span> of 48 products</div>
+      <div class="view-toggle">
+        <button class="view-btn" data-view="2" aria-label="2 column view">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg>
+        </button>
+        <button class="view-btn active" data-view="3" aria-label="3 column view">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="5" height="18" rx="1"/><rect x="9.5" y="3" width="5" height="18" rx="1"/><rect x="17" y="3" width="5" height="18" rx="1"/></svg>
+        </button>
+        <button class="view-btn" data-view="4" aria-label="4 column view">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="4" height="18" rx="1"/><rect x="7.5" y="3" width="4" height="18" rx="1"/><rect x="13" y="3" width="4" height="18" rx="1"/><rect x="18.5" y="3" width="4" height="18" rx="1"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="products-grid" id="products-grid">
+
+      <!-- YOGA & MEDITATION -->
+      <div class="product-card" data-cat="yoga" data-price="52" data-name="stoneware mug dusk">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1545389336-cf090694435e?w=600&q=75" alt="Eco Yoga Mat" loading="lazy"/>
+          <span class="product-badge new">New</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Natural Rubber · Ecuador</p>
+          <h3 class="product-name">Cork & Natural Rubber Yoga Mat — Forest Edition</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(142)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$78</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="yoga" data-price="34" data-name="meditation cushion">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1602192509154-0b900ee1f851?w=600&q=75" alt="Meditation Cushion" loading="lazy"/>
+          <span class="product-badge">Bestseller</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Organic Buckwheat · Japan</p>
+          <h3 class="product-name">Buckwheat Zafu Meditation Cushion in Stone</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(89)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$64</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="yoga" data-price="28" data-name="yoga blocks">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=600&q=75" alt="Bamboo Yoga Blocks" loading="lazy"/>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Bamboo · Vietnam</p>
+          <h3 class="product-name">Solid Bamboo Yoga Block Set of 2</h3>
+          <div class="product-stars"><span class="stars">★★★★☆</span><span class="review-count">(57)</span></div>
+          <div class="product-foot">
+            <div class="product-price"><span class="old">$36</span>$28</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAMPING & HIKING -->
+      <div class="product-card" data-cat="camping" data-price="48" data-name="hammock">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=75" alt="Camping Hammock" loading="lazy"/>
+          <span class="product-badge new">New</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Ripstop Nylon · US</p>
+          <h3 class="product-name">Lightweight Packable Camping Hammock with Straps</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(203)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$48</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="camping" data-price="38" data-name="dry bag">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1533240332313-0db49b459ad6?w=600&q=75" alt="Hiking Backpack" loading="lazy"/>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Recycled Materials · EU</p>
+          <h3 class="product-name">Ultralight 28L Day Hiking Pack — Sage</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(118)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$89</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="camping" data-price="29" data-name="solar lantern">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=75" alt="Solar Lantern" loading="lazy"/>
+          <span class="product-badge sale">Sale</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Solar · US Warehouse</p>
+          <h3 class="product-name">Collapsible Solar Lantern & USB Charger</h3>
+          <div class="product-stars"><span class="stars">★★★★☆</span><span class="review-count">(74)</span></div>
+          <div class="product-foot">
+            <div class="product-price"><span class="old">$42</span>$29</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PETS -->
+      <div class="product-card" data-cat="pets" data-price="68" data-name="pet carrier backpack">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&q=75" alt="Pet Carrier" loading="lazy"/>
+          <span class="product-badge new">New</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Ventilated Mesh · US</p>
+          <h3 class="product-name">Hiking Dog Carrier Backpack — Up to 25 lbs</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(96)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$68</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="pets" data-price="18" data-name="collapsible bowl">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=75" alt="Dog on trail" loading="lazy"/>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Silicone · US Warehouse</p>
+          <h3 class="product-name">Collapsible Trail Bowl Set — Dog & Cat</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(211)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$18</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WELLNESS -->
+      <div class="product-card" data-cat="wellness" data-price="44" data-name="acupressure mat">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=75" alt="Acupressure Mat" loading="lazy"/>
+          <span class="product-badge">Bestseller</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Linen + ABS · Sweden</p>
+          <h3 class="product-name">Acupressure Mat & Pillow Set — Sage Linen</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(178)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$44</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRINTED ITEMS -->
+      <div class="product-card" data-cat="printed" data-price="36" data-name="water bottle botanical">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=75" alt="Water Bottle" loading="lazy"/>
+          <span class="product-badge new">New</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Stainless Steel · Print on Demand</p>
+          <h3 class="product-name">Insulated Water Bottle — Botanical Line Art Print</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(64)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$36</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="printed" data-price="26" data-name="coffee mug ceramic botanical">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=600&q=75" alt="Coffee Mug" loading="lazy"/>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Ceramic · Print on Demand</p>
+          <h3 class="product-name">Ceramic Mug — Forest Fern Illustration, 11oz</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(132)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$26</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="printed" data-price="34" data-name="organic tshirt nature">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=75" alt="Organic T-Shirt" loading="lazy"/>
+          <span class="product-badge new">New</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Organic Cotton · Bella+Canvas</p>
+          <h3 class="product-name">Organic Tee — Mountain Topographic Print</h3>
+          <div class="product-stars"><span class="stars">★★★★☆</span><span class="review-count">(47)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$34</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- KAYAKING -->
+      <div class="product-card" data-cat="kayaking" data-price="22" data-name="dry bag waterproof">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=75" alt="Dry Bag" loading="lazy"/>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">PVC-Free · US Warehouse</p>
+          <h3 class="product-name">Roll-Top Dry Bag 10L — Sage Green</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(88)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$22</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ECO HOME -->
+      <div class="product-card" data-cat="home" data-price="38" data-name="dried botanicals pampas">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&q=75" alt="Dried Botanicals" loading="lazy"/>
+          <span class="product-badge">Bestseller</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Dried · Provence, FR</p>
+          <h3 class="product-name">Dried Pampas & Wild Grasses Bundle</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(156)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$38</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-cat="home" data-price="29" data-name="beeswax candle">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?w=600&q=75" alt="Beeswax Candle" loading="lazy"/>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Raw Beeswax · Vermont, US</p>
+          <h3 class="product-name">Beeswax Pillar Candle — Forest Resin Scent</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(93)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$29</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROCK CLIMBING -->
+      <div class="product-card" data-cat="climbing" data-price="24" data-name="chalk bag canvas">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1522163182402-834f871fd851?w=600&q=75" alt="Rock Climbing" loading="lazy"/>
+          <span class="product-badge new">New</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Canvas · US</p>
+          <h3 class="product-name">Handmade Canvas Chalk Bag — Botanical Print</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(41)</span></div>
+          <div class="product-foot">
+            <div class="product-price">$24</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WELLNESS extra -->
+      <div class="product-card" data-cat="wellness" data-price="14" data-name="hinoki charcoal soap">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=75" alt="Natural Soap" loading="lazy"/>
+          <span class="product-badge sale">Sale</span>
+          <button class="product-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          <button class="quick-view">Quick View</button>
+        </div>
+        <div class="product-info">
+          <p class="product-origin">Cold Press · Kyoto, JP</p>
+          <h3 class="product-name">Cold-Press Hinoki & Charcoal Soap Bar</h3>
+          <div class="product-stars"><span class="stars">★★★★★</span><span class="review-count">(72)</span></div>
+          <div class="product-foot">
+            <div class="product-price"><span class="old">$18</span>$14</div>
+            <button class="btn-add"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /products-grid -->
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">
+        <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="nav-logo" href="index.html">Kindly <span>Offerings</span></a>
+      <p>A considered shop for goods made with care, sourced from the world's most thoughtful makers. Earth-honest. Always.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Yoga & Meditation</a></li>
+        <li><a href="#">Camping & Hiking</a></li>
+        <li><a href="#">Traveling with Pets</a></li>
+        <li><a href="#">Printed Items</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Maker Standards</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Sustainability</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#">Shipping & Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Size Guide</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Kindly Offerings. Made kindly.</span>
+    <div class="social-links">
+      <a href="#" class="social-link" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="#" class="social-link" aria-label="Pinterest">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.03-2.83.19-.77 1.27-5.38 1.27-5.38s-.32-.65-.32-1.61c0-1.51.88-2.64 1.97-2.64.93 0 1.38.7 1.38 1.54 0 .94-.6 2.34-.91 3.64-.26 1.09.54 1.97 1.6 1.97 1.93 0 3.41-2.03 3.41-4.97 0-2.6-1.87-4.41-4.54-4.41-3.09 0-4.9 2.31-4.9 4.7 0 .93.36 1.93.8 2.47.09.11.1.2.07.31-.08.33-.26 1.09-.3 1.24-.05.2-.17.24-.38.15-1.4-.65-2.28-2.7-2.28-4.35 0-3.53 2.57-6.78 7.41-6.78 3.89 0 6.91 2.77 6.91 6.47 0 3.86-2.43 6.97-5.8 6.97-1.13 0-2.2-.59-2.57-1.28l-.7 2.6c-.25.97-.93 2.18-1.39 2.92.42.13.87.2 1.33.2C17.52 22 22 17.52 22 12S17.52 2 12 2z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── CATEGORY FILTERING ──
+  const allCards = Array.from(document.querySelectorAll('.product-card'));
+  const grid = document.getElementById('products-grid');
+  const showingCount = document.getElementById('showing-count');
+
+  function filterProducts() {
+    const activeCat = document.querySelector('#category-filters button.active')?.dataset.cat || 'all';
+    const searchVal = document.getElementById('search-input').value.toLowerCase();
+    const minPrice = parseFloat(document.getElementById('price-min').value) || 0;
+    const maxPrice = parseFloat(document.getElementById('price-max').value) || 9999;
+
+    let visible = 0;
+    allCards.forEach(card => {
+      const catMatch = activeCat === 'all' || card.dataset.cat === activeCat;
+      const nameMatch = card.dataset.name.includes(searchVal);
+      const price = parseFloat(card.dataset.price);
+      const priceMatch = price >= minPrice && price <= maxPrice;
+      const show = catMatch && nameMatch && priceMatch;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    showingCount.textContent = visible;
+  }
+
+  // Category buttons
+  document.querySelectorAll('#category-filters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#category-filters button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterProducts();
+    });
+  });
+
+  // Search
+  document.getElementById('search-input').addEventListener('input', filterProducts);
+
+  // Price
+  document.getElementById('price-min').addEventListener('change', filterProducts);
+  document.getElementById('price-max').addEventListener('change', filterProducts);
+
+  // Tags
+  document.querySelectorAll('.tag').forEach(tag => {
+    tag.addEventListener('click', () => tag.classList.toggle('active'));
+  });
+
+  // Clear filters
+  document.getElementById('clear-filters').addEventListener('click', () => {
+    document.querySelectorAll('#category-filters button').forEach(b => b.classList.remove('active'));
+    document.querySelector('#category-filters button[data-cat="all"]').classList.add('active');
+    document.getElementById('search-input').value = '';
+    document.getElementById('price-min').value = '';
+    document.getElementById('price-max').value = '';
+    document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+    filterProducts();
+  });
+
+  // ── VIEW TOGGLE ──
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      grid.classList.remove('view-2','view-3','view-4');
+      grid.classList.add('view-' + btn.dataset.view);
+    });
+  });
+
+  // ── ADD TO CART ──
+  document.querySelectorAll('.btn-add').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const orig = btn.innerHTML;
+      btn.textContent = 'Added ✓';
+      btn.style.background = 'var(--sage)';
+      setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1600);
+    });
+  });
+
+  // ── WISHLIST ──
+  document.querySelectorAll('.product-wishlist').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      btn.style.color = btn.style.color === 'var(--clay)' ? '' : 'var(--clay)';
+    });
+  });
+</script>
+</body>
+</html>
